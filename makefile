@@ -10,7 +10,7 @@ SOURCES		= server.c module.c common.c main.c
 # Object files corresponding to source files.
 OBJECTS		= $(SOURCES:.c=.o)
 # Server module shared library files.
-MODULES		= issue.so time.so
+MODULES		= time.so
 
 
 .PHONY:         all clean
@@ -26,7 +26,7 @@ clean:
 # dynamically loaded modules can bind symbols in the program.  Link in
 # libdl, which contains calls for dynamic loading.
 server:         $(OBJECTS)
-	$(CC) $(CFLAGS) -Wl,-export-dyanamic -o $@ $^ -ldl
+	$(CC) $(CFLAGS) -Wl,-export_dynamic -o $@ $^ -ldl
 
 # All object files in the server depend on server.h.  But use the
 # default rule for building object files from source files.

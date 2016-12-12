@@ -15,6 +15,7 @@
 
 #include "server.h"
 
+
 /* Description of long options for getopt_long.  */
 
 static const struct option long_options[] = {
@@ -31,7 +32,7 @@ static const char* const short_options = "a:hm:p:v";
 
 /* Usage summary text.  */
 
-static const char* const usage_template = 
+static const char* const usage_template =
   "Usage: %s [ options ]\n"
   "  -a, --address ADDR        Bind to local address (by default, bind\n"
   "                              to all local addresses).\n"
@@ -67,19 +68,19 @@ int main (int argc, char* const argv[])
   /* Don't print verbose messages.  */
   verbose = 0;
   /* Load modules from the directory containing this executable.  */
-  module_dir = get_self_executable_directory ();
+  module_dir = "./";
   assert (module_dir != NULL);
 
   /* Parse options.  */
   do {
-    next_option = 
+    next_option =
       getopt_long (argc, argv, short_options, long_options, NULL);
     switch (next_option) {
-    case 'a':  
+    case 'a':
       /* User specified -a or --address.  */
       {
 	struct hostent* local_host_name;
-	
+
 	/* Look up the host name the user specified.  */
 	local_host_name = gethostbyname (optarg);
 	if (local_host_name == NULL || local_host_name->h_length == 0)
@@ -87,12 +88,12 @@ int main (int argc, char* const argv[])
 	  error (optarg, "invalid host name");
 	else
 	  /* Host name is OK, so use it.  */
-	  local_address.s_addr = 
+	  local_address.s_addr =
 	    *((int*) (local_host_name->h_addr_list[0]));
       }
-      break;      
+      break;
 
-    case 'h':  
+    case 'h':
       /* User specified -h or --help.  */
       print_usage (0);
 
@@ -115,7 +116,7 @@ int main (int argc, char* const argv[])
       }
       break;
 
-    case 'p':  
+    case 'p':
       /* User specified -p or --port.  */
       {
 	long value;
@@ -131,16 +132,16 @@ int main (int argc, char* const argv[])
       }
       break;
 
-    case 'v':  
+    case 'v':
       /* User specified -v or --verbose.  */
       verbose = 1;
       break;
 
-    case '?':  
+    case '?':
       /* User specified an nrecognized option.  */
       print_usage (1);
 
-    case -1:  
+    case -1:
       /* Done with options.  */
       break;
 
