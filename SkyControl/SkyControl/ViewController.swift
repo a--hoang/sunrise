@@ -41,27 +41,27 @@ class ViewController: UIViewController, UITextFieldDelegate {
         serverNameLabel.text = "http://127.0.0.1:8080"
     }
     
-    //Needs Test File Specified
-    @IBAction func testConnection(_ sender: Any) {
-        if let url = NSURL(string: serverNameLabel.text!){
+    //Check Test File Specified
+    @IBAction func testConnection(_ sender: UIButton) {
+        if let url = NSURL(string: serverNameLabel.text! + "/test"){
             UIApplication.shared.open(url as URL, options: [:], completionHandler: nil)
         }
     }
-    //Needs Script Logic
+    //Check Script Logic
     @IBAction func sunriseCmd(_ sender: Any) {
-        if let url = NSURL(string: serverNameLabel.text!){
+        if let url = NSURL(string: serverNameLabel.text! + "/sunrise"){
             UIApplication.shared.open(url as URL, options: [:], completionHandler: nil)
         }
     }
-    //Needs Script Logic
+    //Check Script Logic
     @IBAction func sunsetCmd(_ sender: Any) {
-        if let url = NSURL(string: serverNameLabel.text!){
+        if let url = NSURL(string: serverNameLabel.text! + "/sunset"){
             UIApplication.shared.open(url as URL, options: [:], completionHandler: nil)
         }
     }
-    //Needs Script Logic
+    //Check Script Logic
     @IBAction func nightSkyCmd(_ sender: Any) {
-        if let url = NSURL(string: serverNameLabel.text!){
+        if let url = NSURL(string: serverNameLabel.text! + "/nightsky"){
             UIApplication.shared.open(url as URL, options: [:], completionHandler: nil)
         }
     }

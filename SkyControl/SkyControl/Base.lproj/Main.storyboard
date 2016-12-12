@@ -23,91 +23,124 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="SIu-Qa-yVI">
-                                <rect key="frame" x="131" y="369" width="112" height="135"/>
+                                <rect key="frame" x="66" y="357" width="243" height="147"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mrd-6h-k65">
-                                        <rect key="frame" x="0.0" y="0.0" width="112" height="30"/>
-                                        <state key="normal" title="Test Connection"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="243" height="33"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                        <state key="normal" title="Test Connection">
+                                            <color key="titleColor" red="0.40000000600000002" green="0.80000001190000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        </state>
                                         <connections>
                                             <action selector="testConnection:" destination="BYZ-38-t0r" eventType="touchUpInside" id="9iu-p4-zgK"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Gfk-rE-1zm">
-                                        <rect key="frame" x="30" y="35" width="52" height="30"/>
-                                        <state key="normal" title="Sunrise"/>
+                                        <rect key="frame" x="0.0" y="38" width="243" height="33"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                        <state key="normal" title="Sunrise">
+                                            <color key="titleColor" red="1" green="0.50196081400000003" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                        </state>
                                         <connections>
                                             <action selector="sunriseCmd:" destination="BYZ-38-t0r" eventType="touchUpInside" id="1QL-vd-J58"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FY7-hI-D5L">
-                                        <rect key="frame" x="32" y="70" width="48" height="30"/>
-                                        <state key="normal" title="Sunset"/>
+                                        <rect key="frame" x="0.0" y="76" width="243" height="33"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                        <state key="normal" title="Sunset">
+                                            <color key="titleColor" red="1" green="0.0" blue="0.50196081400000003" alpha="1" colorSpace="calibratedRGB"/>
+                                        </state>
                                         <connections>
                                             <action selector="sunsetCmd:" destination="BYZ-38-t0r" eventType="touchUpInside" id="XCy-HZ-PLi"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="j64-V3-Af7">
-                                        <rect key="frame" x="22.5" y="105" width="67" height="30"/>
-                                        <state key="normal" title="Night Sky"/>
+                                        <rect key="frame" x="0.0" y="114" width="243" height="33"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                        <state key="normal" title="Night Sky">
+                                            <color key="titleColor" red="0.0" green="0.0" blue="0.50196081400000003" alpha="1" colorSpace="calibratedRGB"/>
+                                        </state>
                                         <connections>
                                             <action selector="nightSkyCmd:" destination="BYZ-38-t0r" eventType="touchUpInside" id="wzT-tW-u9K"/>
                                         </connections>
                                     </button>
                                 </subviews>
+                                <constraints>
+                                    <constraint firstItem="Gfk-rE-1zm" firstAttribute="leading" secondItem="SIu-Qa-yVI" secondAttribute="leading" id="5dz-IJ-S8o"/>
+                                    <constraint firstAttribute="trailing" secondItem="Mrd-6h-k65" secondAttribute="trailing" id="CrB-HN-Ec3"/>
+                                    <constraint firstAttribute="trailing" secondItem="FY7-hI-D5L" secondAttribute="trailing" id="HjB-em-LZI"/>
+                                    <constraint firstItem="Mrd-6h-k65" firstAttribute="leading" secondItem="SIu-Qa-yVI" secondAttribute="leading" id="MOx-NY-MhZ"/>
+                                    <constraint firstItem="j64-V3-Af7" firstAttribute="leading" secondItem="SIu-Qa-yVI" secondAttribute="leading" id="a6L-78-XxO"/>
+                                    <constraint firstAttribute="trailing" secondItem="j64-V3-Af7" secondAttribute="trailing" id="ie0-b1-kjd"/>
+                                    <constraint firstItem="FY7-hI-D5L" firstAttribute="leading" secondItem="SIu-Qa-yVI" secondAttribute="leading" id="oHY-RF-13H"/>
+                                    <constraint firstAttribute="trailing" secondItem="Gfk-rE-1zm" secondAttribute="trailing" id="pSV-Yv-EwU"/>
+                                </constraints>
                             </stackView>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="gcJ-sZ-6be">
-                                <rect key="frame" x="88" y="64" width="199" height="47"/>
+                                <rect key="frame" x="66" y="64" width="243" height="47"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Current Server IP:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="09k-aB-6cq">
-                                        <rect key="frame" x="31.5" y="0.0" width="136" height="20.5"/>
+                                        <rect key="frame" x="53.5" y="0.0" width="136" height="20.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="http://127.0.0.1:8080" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lGI-Cu-2uP">
-                                        <rect key="frame" x="13" y="26.5" width="173" height="20.5"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="http://127.0.0.1:8080" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lGI-Cu-2uP">
+                                        <rect key="frame" x="0.0" y="26.5" width="243" height="20.5"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                 </subviews>
+                                <constraints>
+                                    <constraint firstItem="lGI-Cu-2uP" firstAttribute="leading" secondItem="gcJ-sZ-6be" secondAttribute="leading" id="Ymh-zW-MnC"/>
+                                    <constraint firstAttribute="trailing" secondItem="lGI-Cu-2uP" secondAttribute="trailing" id="nf0-FO-huU"/>
+                                </constraints>
                             </stackView>
                             <stackView opaque="NO" contentMode="scaleToFill" placeholderIntrinsicWidth="143" placeholderIntrinsicHeight="92.5" axis="vertical" alignment="center" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="Vvm-5V-6Su">
-                                <rect key="frame" x="116" y="171" width="143" height="92.5"/>
+                                <rect key="frame" x="66" y="171" width="243" height="95.5"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Set New Server IP:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pTO-va-CP9">
-                                        <rect key="frame" x="0.5" y="0.0" width="142.5" height="20.5"/>
+                                        <rect key="frame" x="50.5" y="0.0" width="142.5" height="20.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" placeholderIntrinsicWidth="143" placeholderIntrinsicHeight="30" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="http://127.0.0.1:8080" textAlignment="center" clearsOnBeginEditing="YES" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Yeb-Re-Omi">
-                                        <rect key="frame" x="0.0" y="26.5" width="143" height="30"/>
+                                        <rect key="frame" x="0.0" y="26.5" width="243" height="30"/>
                                         <nil key="textColor"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                         <textInputTraits key="textInputTraits" returnKeyType="continue"/>
                                     </textField>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gDE-QT-p6P">
-                                        <rect key="frame" x="24.5" y="62.5" width="94" height="30"/>
-                                        <state key="normal" title="Set Default IP"/>
+                                        <rect key="frame" x="65.5" y="62.5" width="112" height="33"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                        <state key="normal" title="Set Default IP">
+                                            <color key="titleColor" red="0.40000000600000002" green="0.80000001190000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        </state>
                                         <connections>
                                             <action selector="setDefaultServerIP:" destination="BYZ-38-t0r" eventType="touchUpInside" id="esq-L7-4mo"/>
                                         </connections>
                                     </button>
                                 </subviews>
+                                <constraints>
+                                    <constraint firstItem="Yeb-Re-Omi" firstAttribute="leading" secondItem="Vvm-5V-6Su" secondAttribute="leading" id="7ZK-G2-zHo"/>
+                                    <constraint firstAttribute="trailing" secondItem="Yeb-Re-Omi" secondAttribute="trailing" id="d7N-c8-Z54"/>
+                                </constraints>
                             </stackView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstAttribute="trailingMargin" secondItem="SIu-Qa-yVI" secondAttribute="trailing" constant="116" id="51h-Df-J7B"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="gcJ-sZ-6be" secondAttribute="trailing" constant="50" id="1hE-Qq-jWQ"/>
+                            <constraint firstItem="Vvm-5V-6Su" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="50" id="51V-y7-STH"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="SIu-Qa-yVI" secondAttribute="bottom" constant="163" id="5m8-ki-12t"/>
                             <constraint firstItem="gcJ-sZ-6be" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="44" id="85e-kJ-dOP"/>
-                            <constraint firstItem="SIu-Qa-yVI" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="115" id="91c-Dv-XeT"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="gcJ-sZ-6be" secondAttribute="trailing" constant="72" id="CNw-vx-rbE"/>
-                            <constraint firstItem="Vvm-5V-6Su" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="100" id="Lax-ie-XYa"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="Vvm-5V-6Su" secondAttribute="trailing" constant="100" id="Q5a-ZT-Ds5"/>
-                            <constraint firstItem="gcJ-sZ-6be" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="72" id="boL-D2-cGS"/>
+                            <constraint firstItem="gcJ-sZ-6be" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="50" id="E6d-m7-VnE"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="SIu-Qa-yVI" secondAttribute="trailing" constant="50" id="R95-lg-zwy"/>
+                            <constraint firstItem="SIu-Qa-yVI" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="50" id="TLM-Ey-my0"/>
                             <constraint firstItem="Vvm-5V-6Su" firstAttribute="top" secondItem="gcJ-sZ-6be" secondAttribute="bottom" constant="60" id="teE-7t-AMh"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="Vvm-5V-6Su" secondAttribute="trailing" constant="50" id="yJk-fy-Fh7"/>
                         </constraints>
                     </view>
                     <connections>
