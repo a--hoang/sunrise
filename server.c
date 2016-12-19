@@ -282,6 +282,43 @@ static void handle_get (int connection_fd, const char* page)
     write(connection_fd, response, strlen(jpg_response) + fileLen + 1);
     fclose(file);
   }
+  else if (strstr(page, ".cgi") != NULL) {
+    char* buffer[1000];
+
+    char * cmd = malloc(strlen(page)+10);
+    char * filename = malloc(strlen(page)+2);
+    strcat(filename, ".");
+    strcat(filename, page);
+    strcat(cmd, "/bin/sh ");
+    strcat(cmd, filename);
+
+    if(open(filename, O_RDONLY) == -1)
+    {
+      // 404 not found
+      char response[1024];
+      snprintf (response, sizeof (response), not_found_response_template, page);
+      write (connection_fd, response, strlen (response));
+      return;
+    }
+
+    FILE * file = popen(cmd, "r");
+    if (file == NULL) {
+      char response[1024];
+      snprintf (response, sizeof (response), not_found_response_template, page);
+      write (connection_fd, response, strlen (response));
+      return;
+    }
+
+    while (fgets(buffer, sizeof(buffer)-1, file) != NULL) {
+      printf("%s", buffer);
+    }
+
+    char * response = malloc(strlen(ok_response)+1);
+    strcat(response, ok_response);
+
+    write(connection_fd, response, strlen(response));
+    pclose(file);
+  }
   else {
 
     /* Make sure the requested page begins with a slash and does not
