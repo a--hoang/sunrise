@@ -1,0 +1,4 @@
+#!/bin/bash
+# Search Script for Directories
+
+find . -type f | sed 's/.*\.//' | sort | uniq -c >output.txt
