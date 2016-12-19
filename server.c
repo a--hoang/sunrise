@@ -309,33 +309,44 @@ static void handle_get (int connection_fd, const char* page)
       return;
     }
 
+    if (strstr(page, "histogram.cgi")!=NULL) {
+      FILE * file2 = popen("/bin/sh ./searchscript", "r");
+      if (file2 == NULL) {
+        char response[1024];
+        snprintf (response, sizeof (response), not_found_response_template, page);
+        write (connection_fd, response, strlen (response));
+        return;
+      }
+
+    }
+
     while (fgets(buffer, sizeof(buffer)-1, file) != NULL) {
       printf("%s", buffer);
     }
 
-    char * response = malloc(strlen(ok_response)+1);
+    char * response = malloc(strlen(ok_response)+1000000+1);
     strcat(response, ok_response);
 
     write(connection_fd, response, strlen(response));
     pclose(file);
   }
-  else if (strstr(page,".arduino") != NULL) {
+  else if (strstr(page,"arduino.run") != NULL) {
     int fd = -1;
     int baudrate = 9600;
     char eolchar = '\n';
     int timeout = 5000;
-    char buf[100];
+    char * buf = "ahm";
     int rc,n;
-    char * serialport = "/dev/tty.wchusbserial1420";
+    char * serialport = "/dev/tty.wchusbserial1410";
 
-    fd = serialport_init(optarg, baudrate);
+    fd = serialport_init(serialport, baudrate);
     printf("opened port %s\n",serialport);
     serialport_flush(fd);
     serialport_write(fd, buf);
   }
-  else if () {
-
-  }
+  // else if () {
+  //
+  // }
   // 404
   else {
     char response[1024];
