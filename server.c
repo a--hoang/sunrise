@@ -319,45 +319,29 @@ static void handle_get (int connection_fd, const char* page)
     write(connection_fd, response, strlen(response));
     pclose(file);
   }
+  else if (strstr(page,".arduino") != NULL) {
+    int fd = -1;
+    int baudrate = 9600;
+    char eolchar = '\n';
+    int timeout = 5000;
+    char buf[100];
+    int rc,n;
+    char * serialport = "/dev/tty.wchusbserial1420";
+
+    fd = serialport_init(optarg, baudrate);
+    printf("opened port %s\n",serialport);
+    serialport_flush(fd);
+    serialport_write(fd, buf);
+  }
+  else if () {
+
+  }
+  // 404
   else {
-
-    /* Make sure the requested page begins with a slash and does not
-       contain any additional slashes -- we don't support any
-       subdirectories.  */
-    if (*page == '/' && strchr (page + 1, '/') == NULL) {
-      char module_file_name[64];
-
-      /* The page name looks OK.  Construct the module name by appending
-         ".so" to the page name.  */
-      snprintf (module_file_name, sizeof (module_file_name),
-  	      "%s.so", page + 1);
-      /* Try to open the module.  */
-      module = module_open (module_file_name);
-    }
-
-    if (module == NULL) {
-      /* Either the requested page was malformed, or we couldn't open a
-         module with the indicated name.  Either way, return the HTTP
-         response 404, Not Found.  */
-      char response[1024];
-
-      /* Generate the response message.  */
-      snprintf (response, sizeof (response), not_found_response_template, page);
-      /* Send it to the client.  */
-      write (connection_fd, response, strlen (response));
-    }
-    else {
-      /* The requested module was loaded successfully.  */
-
-      /* Send the HTTP response indicating success, and the HTTP header
-         for an HTML page.  */
-      write (connection_fd, ok_response, strlen (ok_response));
-      /* Invoke the module, which will generate HTML output and send it
-         to the client file descriptor.  */
-      (*module->generate_function) (connection_fd);
-      /* We're done with the module.  */
-      module_close (module);
-    }
+    char response[1024];
+    snprintf (response, sizeof (response), not_found_response_template, page);
+    write (connection_fd, response, strlen (response));
+    return;
   }
 }
 

@@ -9,5 +9,5 @@ gnuplot -persist <<-EOFMarker
 	set yrange [0:10<*]
         set xtics center
         set grid
-	plot "output.txt" using 1:xtic(2) title "File Types"
+	plot "output.txt" using 1:xticlabels(2) title "File Types"
 EOFMarker

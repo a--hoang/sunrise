@@ -21,7 +21,6 @@
 static const struct option long_options[] = {
   { "address",          1, NULL, 'a' },
   { "help",             0, NULL, 'h' },
-  { "module-dir",       1, NULL, 'm' },
   { "port",             1, NULL, 'p' },
   { "verbose",          0, NULL, 'v' },
 };
@@ -37,8 +36,6 @@ static const char* const usage_template =
   "  -a, --address ADDR        Bind to local address (by default, bind\n"
   "                              to all local addresses).\n"
   "  -h, --help                Print this information.\n"
-  "  -m, --module-dir DIR      Load modules from specified directory\n"
-  "                              (by default, use executable directory).\n"
   "  -p, --port PORT           Bind to specified port.\n"
   "  -v, --verbose             Print verbose messages.\n";
 
@@ -67,9 +64,6 @@ int main (int argc, char* const argv[])
   port = 0;
   /* Don't print verbose messages.  */
   verbose = 0;
-  /* Load modules from the directory containing this executable.  */
-  module_dir = "./";
-  assert (module_dir != NULL);
 
   /* Parse options.  */
   do {
@@ -96,25 +90,6 @@ int main (int argc, char* const argv[])
     case 'h':
       /* User specified -h or --help.  */
       print_usage (0);
-
-    case 'm':
-      /* User specified -m or --module-dir.  */
-      {
-	struct stat dir_info;
-
-	/* Check that it exists.  */
-	if (access (optarg, F_OK) != 0)
-	  error (optarg, "module directory does not exist");
-	/* Check that it is accessible.  */
-	if (access (optarg, R_OK | X_OK) != 0)
-	  error (optarg, "module directory is not accessible");
-	/* Make sure that it is a directory.  */
-	if (stat (optarg, &dir_info) != 0 || !S_ISDIR (dir_info.st_mode))
-	  error (optarg, "not a directory");
-	/* It looks OK, so use it.  */
-	module_dir = strdup (optarg);
-      }
-      break;
 
     case 'p':
       /* User specified -p or --port.  */
@@ -154,10 +129,6 @@ int main (int argc, char* const argv[])
      user specified any.  */
   if (optind != argc)
     print_usage (1);
-
-  /* Print the module directory, if we're running verbose.  */
-  if (verbose)
-    printf ("modules will be loaded from %s\n", module_dir);
 
   /* Run the server.  */
   server_run (local_address, port);
