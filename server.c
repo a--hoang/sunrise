@@ -43,7 +43,7 @@ struct {
     {"xml", "text/xml"  },
     {"js","text/js"     },
     {"css","test/css"   },
-    
+
     {0,0} };
 
 /* HTTP response and header for a successful request.  */
@@ -110,58 +110,79 @@ static void clean_up_child_process (int signal_number)
 static void handle_get (int connection_fd, const char* page)
 {
   struct server_module* module = NULL;
-    
+
     /* Check to see if HTML or module request*/
     if(strstr(page, ".html")!=NULL){
         long ret;
         int file_fd;
-        char * fstr;
-        static char buffer[BUFSIZE+1];
-        
-        while((ret=read(file_fd, buffer, BUFSIZE))>0){
-            (void)write(connection_fd, buffer, ret);
+        char buffer[BUFSIZE+1];
+        char filename[64];
+
+        snprintf(filename, sizeof(page) + 5, "./%s.html", page+1);
+        // printf("%s\n", page);
+        // printf("%s\n", filename);
+
+        // Try to open html file
+        if (file_fd = open(filename, O_RDONLY) == -1)
+        {
+          // 404 not found
+          char response[1024];
+          snprintf (response, sizeof (response), not_found_response_template, page);
+          write (connection_fd, response, strlen (response));
+          return;
         }
+
+        while((ret=read(file_fd, buffer, BUFSIZE))>0){
+
+        }
+
+        char response[strlen(ok_response)+strlen(buffer)+1];
+        strcat(response, ok_response);
+        strcat(response, buffer);
+
+        // printf("%s\n", response);
+
+        write(connection_fd, response, strlen(response));
     } else {
 
-  /* Make sure the requested page begins with a slash and does not
-     contain any additional slashes -- we don't support any
-     subdirectories.  */
-  if (*page == '/' && strchr (page + 1, '/') == NULL) {
-    char module_file_name[64];
+      /* Make sure the requested page begins with a slash and does not
+         contain any additional slashes -- we don't support any
+         subdirectories.  */
+      if (*page == '/' && strchr (page + 1, '/') == NULL) {
+        char module_file_name[64];
 
-    /* The page name looks OK.  Construct the module name by appending
-       ".so" to the page name.  */
-    snprintf (module_file_name, sizeof (module_file_name),
-	      "%s.so", page + 1);
-    /* Try to open the module.  */
-    module = module_open (module_file_name);
-  }
+        /* The page name looks OK.  Construct the module name by appending
+           ".so" to the page name.  */
+        snprintf (module_file_name, sizeof (module_file_name),
+    	      "%s.so", page + 1);
+        /* Try to open the module.  */
+        module = module_open (module_file_name);
+      }
 
-  if (module == NULL) {
-    /* Either the requested page was malformed, or we couldn't open a
-       module with the indicated name.  Either way, return the HTTP
-       response 404, Not Found.  */
-    char response[1024];
+      if (module == NULL) {
+        /* Either the requested page was malformed, or we couldn't open a
+           module with the indicated name.  Either way, return the HTTP
+           response 404, Not Found.  */
+        char response[1024];
 
-    /* Generate the response message.  */
-    snprintf (response, sizeof (response), not_found_response_template, page);
-    /* Send it to the client.  */
-    write (connection_fd, response, strlen (response));
-  }
-  else {
-    /* The requested module was loaded successfully.  */
+        /* Generate the response message.  */
+        snprintf (response, sizeof (response), not_found_response_template, page);
+        /* Send it to the client.  */
+        write (connection_fd, response, strlen (response));
+      }
+      else {
+        /* The requested module was loaded successfully.  */
 
-    /* Send the HTTP response indicating success, and the HTTP header
-       for an HTML page.  */
-    write (connection_fd, ok_response, strlen (ok_response));
-    /* Invoke the module, which will generate HTML output and send it
-       to the client file descriptor.  */
-    (*module->generate_function) (connection_fd);
-    /* We're done with the module.  */
-    module_close (module);
-  }
+        /* Send the HTTP response indicating success, and the HTTP header
+           for an HTML page.  */
+        write (connection_fd, ok_response, strlen (ok_response));
+        /* Invoke the module, which will generate HTML output and send it
+           to the client file descriptor.  */
+        (*module->generate_function) (connection_fd);
+        /* We're done with the module.  */
+        module_close (module);
+      }
     }
-    
 }
 
 
@@ -171,14 +192,14 @@ static void handle_connection (int connection_fd)
 {
     char buffer[256];
     ssize_t bytes_read;
-    
+
     /* Read some data from the client.  */
     bytes_read = read (connection_fd, buffer, sizeof (buffer) - 1);
     if (bytes_read > 0) {
         char method[sizeof (buffer)];
         char url[sizeof (buffer)];
         char protocol[sizeof (buffer)];
-        
+
         /* Some data was read successfully.  NUL-terminate the buffer so
          we can use string operations on it.  */
         buffer[bytes_read] = '\0';
@@ -211,7 +232,7 @@ static void handle_connection (int connection_fd)
             /* This server only implements the GET method.  The client
              specified some other method, so report the failure.  */
             char response[1024];
-            
+
             snprintf (response, sizeof (response),
                       bad_method_response_template, method);
             write (connection_fd, response, strlen (response));
@@ -319,7 +340,7 @@ void server_run (struct in_addr local_address, uint16_t port)
       /* This is the child process.  It shouldn't use stdin or stdout,
 	 so close them.  */
       close (STDIN_FILENO);
-      close (STDOUT_FILENO);
+      // close (STDOUT_FILENO);
       /* Also this child process shouldn't do anything with the
 	 listening socket.  */
       close (server_socket);
