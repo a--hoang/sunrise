@@ -53,6 +53,16 @@ static char* ok_response =
   "Content-type: text/html\n"
   "\n";
 
+static char* jpg_response =
+  "HTTP/1.0 200 OK\n"
+  "Content-type: image/jpeg\n"
+  "\n";
+
+static char* gif_response =
+  "HTTP/1.0 200 OK\n"
+  "Content-type: image/gif\n"
+  "\n";
+
 /* HTTP response, header, and body indicating that the we didn't
    understand the request.  */
 
@@ -111,78 +121,112 @@ static void handle_get (int connection_fd, const char* page)
 {
   struct server_module* module = NULL;
 
-    /* Check to see if HTML or module request*/
-    if(strstr(page, ".html")!=NULL){
-        long ret;
-        int file_fd;
-        char buffer[BUFSIZE+1];
-        char filename[64];
+  /* Check to see if HTML or module request*/
+  if(strstr(page, ".html")!= NULL){
+    long ret;
+    int file_fd;
+    char buffer[BUFSIZE+1];
+    char  * filename = malloc(strlen(page)+2);
 
-        snprintf(filename, sizeof(page) + 5, "./%s.html", page+1);
-        // printf("%s\n", page);
-        // printf("%s\n", filename);
+    strcat(filename, ".");
+    strcat(filename, page);
+    printf("%s\n", filename);
 
-        // Try to open html file
-        if (file_fd = open(filename, O_RDONLY) == -1)
-        {
-          // 404 not found
-          char response[1024];
-          snprintf (response, sizeof (response), not_found_response_template, page);
-          write (connection_fd, response, strlen (response));
-          return;
-        }
-
-        while((ret=read(file_fd, buffer, BUFSIZE))>0){
-
-        }
-
-        char response[strlen(ok_response)+strlen(buffer)+1];
-        strcat(response, ok_response);
-        strcat(response, buffer);
-
-        // printf("%s\n", response);
-
-        write(connection_fd, response, strlen(response));
-    } else {
-
-      /* Make sure the requested page begins with a slash and does not
-         contain any additional slashes -- we don't support any
-         subdirectories.  */
-      if (*page == '/' && strchr (page + 1, '/') == NULL) {
-        char module_file_name[64];
-
-        /* The page name looks OK.  Construct the module name by appending
-           ".so" to the page name.  */
-        snprintf (module_file_name, sizeof (module_file_name),
-    	      "%s.so", page + 1);
-        /* Try to open the module.  */
-        module = module_open (module_file_name);
-      }
-
-      if (module == NULL) {
-        /* Either the requested page was malformed, or we couldn't open a
-           module with the indicated name.  Either way, return the HTTP
-           response 404, Not Found.  */
-        char response[1024];
-
-        /* Generate the response message.  */
-        snprintf (response, sizeof (response), not_found_response_template, page);
-        /* Send it to the client.  */
-        write (connection_fd, response, strlen (response));
-      }
-      else {
-        /* The requested module was loaded successfully.  */
-
-        /* Send the HTTP response indicating success, and the HTTP header
-           for an HTML page.  */
-        write (connection_fd, ok_response, strlen (ok_response));
-        /* Invoke the module, which will generate HTML output and send it
-           to the client file descriptor.  */
-        (*module->generate_function) (connection_fd);
-        /* We're done with the module.  */
-        module_close (module);
-      }
+    // Try to open html file
+    if (file_fd = open(filename, O_RDONLY) == -1)
+    {
+      // 404 not found
+      char response[1024];
+      snprintf (response, sizeof (response), not_found_response_template, page);
+      write (connection_fd, response, strlen (response));
+      return;
     }
+
+    while((ret=read(file_fd, buffer, BUFSIZE))>0){
+
+    }
+
+    char response[strlen(ok_response)+strlen(buffer)+1];
+    strcat(response, ok_response);
+    strcat(response, buffer);
+
+    // printf("%s\n", response);
+
+    write(connection_fd, response, strlen(response));
+  }
+  /* jpg support */
+  else if (strstr(page, ".jpeg") != NULL) {
+    long ret;
+    int file_fd;
+    char buffer[BUFSIZE+1];
+    char filename[64];
+
+    // strcat(filename, strlen(page), "./%s.jpeg", page+1);
+    // printf("%s\n", page);
+    printf("%s\n", filename);
+
+    // Try to open html file
+    if (file_fd = open(filename, O_RDONLY) == -1)
+    {
+      // 404 not found
+      char response[1024];
+      snprintf (response, sizeof (response), not_found_response_template, page);
+      write (connection_fd, response, strlen (response));
+      return;
+    }
+
+    while((ret=read(file_fd, buffer, BUFSIZE))>0){
+
+    }
+
+    char response[strlen(ok_response)+strlen(buffer)+1];
+    strcat(response, ok_response);
+    strcat(response, buffer);
+
+    // printf("%s\n", response);
+
+    write(connection_fd, response, strlen(response));
+  }
+  else {
+
+    /* Make sure the requested page begins with a slash and does not
+       contain any additional slashes -- we don't support any
+       subdirectories.  */
+    if (*page == '/' && strchr (page + 1, '/') == NULL) {
+      char module_file_name[64];
+
+      /* The page name looks OK.  Construct the module name by appending
+         ".so" to the page name.  */
+      snprintf (module_file_name, sizeof (module_file_name),
+  	      "%s.so", page + 1);
+      /* Try to open the module.  */
+      module = module_open (module_file_name);
+    }
+
+    if (module == NULL) {
+      /* Either the requested page was malformed, or we couldn't open a
+         module with the indicated name.  Either way, return the HTTP
+         response 404, Not Found.  */
+      char response[1024];
+
+      /* Generate the response message.  */
+      snprintf (response, sizeof (response), not_found_response_template, page);
+      /* Send it to the client.  */
+      write (connection_fd, response, strlen (response));
+    }
+    else {
+      /* The requested module was loaded successfully.  */
+
+      /* Send the HTTP response indicating success, and the HTTP header
+         for an HTML page.  */
+      write (connection_fd, ok_response, strlen (ok_response));
+      /* Invoke the module, which will generate HTML output and send it
+         to the client file descriptor.  */
+      (*module->generate_function) (connection_fd);
+      /* We're done with the module.  */
+      module_close (module);
+    }
+  }
 }
 
 
