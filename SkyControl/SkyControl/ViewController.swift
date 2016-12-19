@@ -43,13 +43,13 @@ class ViewController: UIViewController, UITextFieldDelegate {
     
     //Check Test File Specified
     @IBAction func testConnection(_ sender: UIButton) {
-        if let url = NSURL(string: serverNameLabel.text! + "/test"){
+        if let url = NSURL(string: serverNameLabel.text! + "/hello.html"){
             UIApplication.shared.open(url as URL, options: [:], completionHandler: nil)
         }
     }
     //Check Script Logic
     @IBAction func sunriseCmd(_ sender: Any) {
-        if let url = NSURL(string: serverNameLabel.text! + "/sunrise"){
+        if let url = NSURL(string: serverNameLabel.text! + "/arduino.run"){
             UIApplication.shared.open(url as URL, options: [:], completionHandler: nil)
         }
     }

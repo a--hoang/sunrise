@@ -146,6 +146,7 @@
 				TargetAttributes = {
 					AB6E1F0B1DFE5B8900A9E5B0 = {
 						CreatedOnToolsVersion = 8.1;
+						DevelopmentTeam = 4YVT7ETAN3;
 						ProvisioningStyle = Automatic;
 					};
 					AB6E1F1F1DFE5B8A00A9E5B0 = {
@@ -339,6 +340,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 4YVT7ETAN3;
 				INFOPLIST_FILE = SkyControl/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = dd.SkyControl;
@@ -351,6 +353,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 4YVT7ETAN3;
 				INFOPLIST_FILE = SkyControl/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = dd.SkyControl;
@@ -406,6 +409,7 @@
 				AB6E1F2B1DFE5B8A00A9E5B0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		AB6E1F2C1DFE5B8A00A9E5B0 /* Build configuration list for PBXNativeTarget "SkyControlTests" */ = {
 			isa = XCConfigurationList;
@@ -414,6 +418,7 @@
 				AB6E1F2E1DFE5B8A00A9E5B0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
