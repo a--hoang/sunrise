@@ -16,8 +16,35 @@
 #include <sys/wait.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include<sys/stat.h>
+#include<fcntl.h>
 
 #include "server.h"
+
+#define BUFSIZE 8096
+
+struct {
+    char *ext;
+    char *filetype;
+} extensions [] = {
+    {"gif", "image/gif" },
+    {"jpg", "image/jpeg"},
+    {"jpeg","image/jpeg"},
+    {"png", "image/png" },
+    {"zip", "image/zip" },
+    {"gz",  "image/gz"  },
+    {"tar", "image/tar" },
+    {"htm", "text/html" },
+    {"html","text/html" },
+    {"php", "image/php" },
+    {"cgi", "text/cgi"  },
+    {"asp","text/asp"   },
+    {"jsp", "image/jsp" },
+    {"xml", "text/xml"  },
+    {"js","text/js"     },
+    {"css","test/css"   },
+    
+    {0,0} };
 
 /* HTTP response and header for a successful request.  */
 
@@ -35,7 +62,7 @@ static char* bad_request_response =
   "\n"
   "<html>\n"
   " <body>\n"
-  "  <h1>Bad Request</h1>\n"
+  "  <h1>400 Bad Request</h1>\n"
   "  <p>This server did not understand your request.</p>\n"
   " </body>\n"
   "</html>\n";
@@ -49,7 +76,7 @@ static char* not_found_response_template =
   "\n"
   "<html>\n"
   " <body>\n"
-  "  <h1>Not Found</h1>\n"
+  "  <h1>404 Not Found</h1>\n"
   "  <p>The requested URL %s was not found on this server.</p>\n"
   " </body>\n"
   "</html>\n";
@@ -63,7 +90,7 @@ static char* bad_method_response_template =
   "\n"
   "<html>\n"
   " <body>\n"
-  "  <h1>Method Not Implemented</h1>\n"
+  "  <h1>501 Method Not Implemented</h1>\n"
   "  <p>The method %s is not implemented by this server.</p>\n"
   " </body>\n"
   "</html>\n";
@@ -83,6 +110,18 @@ static void clean_up_child_process (int signal_number)
 static void handle_get (int connection_fd, const char* page)
 {
   struct server_module* module = NULL;
+    
+    /* Check to see if HTML or module request*/
+    if(strstr(page, ".html")!=NULL){
+        long ret;
+        int file_fd;
+        char * fstr;
+        static char buffer[BUFSIZE+1];
+        
+        while((ret=read(file_fd, buffer, BUFSIZE))>0){
+            (void)write(connection_fd, buffer, ret);
+        }
+    } else {
 
   /* Make sure the requested page begins with a slash and does not
      contain any additional slashes -- we don't support any
@@ -121,70 +160,73 @@ static void handle_get (int connection_fd, const char* page)
     /* We're done with the module.  */
     module_close (module);
   }
+    }
+    
 }
+
 
 /* Handle a client connection on the file descriptor CONNECTION_FD.  */
 
 static void handle_connection (int connection_fd)
 {
-  char buffer[256];
-  ssize_t bytes_read;
-
-  /* Read some data from the client.  */
-  bytes_read = read (connection_fd, buffer, sizeof (buffer) - 1);
-  if (bytes_read > 0) {
-    char method[sizeof (buffer)];
-    char url[sizeof (buffer)];
-    char protocol[sizeof (buffer)];
-
-    /* Some data was read successfully.  NUL-terminate the buffer so
-       we can use string operations on it.  */
-    buffer[bytes_read] = '\0';
-    /* The first line the client sends is the HTTP request, which is
-       composed of a method, the requested page, and the protocol
-       version.  */
-    sscanf (buffer, "%s %s %s", method, url, protocol);
-    /* The client may send various header information following the
-       request.  For this HTTP implementation, we don't care about it.
-       However, we need to read any data the client tries to send.  Keep
-       on reading data until we get to the end of the header, which is
-       delimited by a blank line.  HTTP specifies CR/LF as the line
-       delimiter.  */
-    while (strstr (buffer, "\r\n\r\n") == NULL)
-      bytes_read = read (connection_fd, buffer, sizeof (buffer));
-    /* Make sure the last read didn't fail.  If it did, there's a
-       problem with the connection, so give up.  */
-    if (bytes_read == -1) {
-      close (connection_fd);
-      return;
+    char buffer[256];
+    ssize_t bytes_read;
+    
+    /* Read some data from the client.  */
+    bytes_read = read (connection_fd, buffer, sizeof (buffer) - 1);
+    if (bytes_read > 0) {
+        char method[sizeof (buffer)];
+        char url[sizeof (buffer)];
+        char protocol[sizeof (buffer)];
+        
+        /* Some data was read successfully.  NUL-terminate the buffer so
+         we can use string operations on it.  */
+        buffer[bytes_read] = '\0';
+        /* The first line the client sends is the HTTP request, which is
+         composed of a method, the requested page, and the protocol
+         version.  */
+        sscanf (buffer, "%s %s %s", method, url, protocol);
+        /* The client may send various header information following the
+         request.  For this HTTP implementation, we don't care about it.
+         However, we need to read any data the client tries to send.  Keep
+         on reading data until we get to the end of the header, which is
+         delimited by a blank line.  HTTP specifies CR/LF as the line
+         delimiter.  */
+        while (strstr (buffer, "\r\n\r\n") == NULL)
+            bytes_read = read (connection_fd, buffer, sizeof (buffer));
+        /* Make sure the last read didn't fail.  If it did, there's a
+         problem with the connection, so give up.  */
+        if (bytes_read == -1) {
+            close (connection_fd);
+            return;
+        }
+        /* Check the protocol field.  We understand HTTP versions 1.0 and
+         1.1.  */
+        if (strcmp (protocol, "HTTP/1.0") && strcmp (protocol, "HTTP/1.1")) {
+            /* We don't understand this protocol.  Report a bad response.  */
+            write (connection_fd, bad_request_response,
+                   sizeof (bad_request_response));
+        }
+        else if (strcmp (method, "GET")) {
+            /* This server only implements the GET method.  The client
+             specified some other method, so report the failure.  */
+            char response[1024];
+            
+            snprintf (response, sizeof (response),
+                      bad_method_response_template, method);
+            write (connection_fd, response, strlen (response));
+        }
+        else
+        /* A valid request.  Process it.  */
+            handle_get (connection_fd, url);
     }
-    /* Check the protocol field.  We understand HTTP versions 1.0 and
-       1.1.  */
-    if (strcmp (protocol, "HTTP/1.0") && strcmp (protocol, "HTTP/1.1")) {
-      /* We don't understand this protocol.  Report a bad response.  */
-      write (connection_fd, bad_request_response,
-	     sizeof (bad_request_response));
-    }
-    else if (strcmp (method, "GET")) {
-      /* This server only implements the GET method.  The client
-	 specified some other method, so report the failure.  */
-      char response[1024];
-
-      snprintf (response, sizeof (response),
-		bad_method_response_template, method);
-      write (connection_fd, response, strlen (response));
-    }
-    else
-      /* A valid request.  Process it.  */
-      handle_get (connection_fd, url);
-  }
-  else if (bytes_read == 0)
+    else if (bytes_read == 0)
     /* The client closed the connection before sending any data.
-       Nothing to do.  */
-    ;
-  else
+     Nothing to do.  */
+        ;
+    else
     /* The call to read failed.  */
-    system_error ("read");
+        system_error ("read");
 }
 
 
