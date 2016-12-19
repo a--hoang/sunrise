@@ -22,6 +22,7 @@
 #include "server.h"
 
 #define BUFSIZE 8096
+#define IMGSIZE 10000000
 
 struct {
     char *ext;
@@ -56,11 +57,13 @@ static char* ok_response =
 static char* jpg_response =
   "HTTP/1.0 200 OK\n"
   "Content-type: image/jpeg\n"
+  "Connection: Keep-Alive\n"
   "\n";
 
 static char* gif_response =
   "HTTP/1.0 200 OK\n"
   "Content-type: image/gif\n"
+  "Connection: Keep-Alive\n"
   "\n";
 
 /* HTTP response, header, and body indicating that the we didn't
@@ -146,11 +149,9 @@ static void handle_get (int connection_fd, const char* page)
 
     }
 
-    char response[strlen(ok_response)+strlen(buffer)+1];
+    char * response = malloc(strlen(ok_response)+strlen(buffer)+1);
     strcat(response, ok_response);
     strcat(response, buffer);
-
-    // printf("%s\n", response);
 
     write(connection_fd, response, strlen(response));
   }
@@ -158,34 +159,128 @@ static void handle_get (int connection_fd, const char* page)
   else if (strstr(page, ".jpeg") != NULL) {
     long ret;
     int file_fd;
-    char buffer[BUFSIZE+1];
-    char filename[64];
+    char  * filename = malloc(strlen(page)+2);
 
-    // strcat(filename, strlen(page), "./%s.jpeg", page+1);
-    // printf("%s\n", page);
+    strcat(filename, ".");
+    strcat(filename, page);
+
     printf("%s\n", filename);
 
-    // Try to open html file
-    if (file_fd = open(filename, O_RDONLY) == -1)
+    FILE *file;
+    long fileLen;
+
+    file = fopen(filename, "rb+");
+    if (!file)
     {
-      // 404 not found
       char response[1024];
       snprintf (response, sizeof (response), not_found_response_template, page);
       write (connection_fd, response, strlen (response));
       return;
     }
 
-    while((ret=read(file_fd, buffer, BUFSIZE))>0){
+    fseek(file, 0, SEEK_END);
+    fileLen=ftell(file);
+    rewind(file);
 
+    char * response = malloc(strlen(jpg_response) + fileLen + 1);
+    int i = 0;
+
+    for (i = 0; i < strlen(jpg_response); i++) {
+      response[i] = jpg_response[i];
     }
 
-    char response[strlen(ok_response)+strlen(buffer)+1];
-    strcat(response, ok_response);
-    strcat(response, buffer);
+    for(; i < fileLen; i++) {
+      response[i] = fgetc(file);
+    }
 
     // printf("%s\n", response);
 
-    write(connection_fd, response, strlen(response));
+    write(connection_fd, response, strlen(jpg_response) + fileLen + 1);
+    fclose(file);
+  }
+  else if (strstr(page, ".jpg") != NULL) {
+    long ret;
+    int file_fd;
+    char  * filename = malloc(strlen(page)+2);
+
+    strcat(filename, ".");
+    strcat(filename, page);
+
+    printf("%s\n", filename);
+
+    FILE *file;
+    long fileLen;
+
+    file = fopen(filename, "rb+");
+    if (!file)
+    {
+      char response[1024];
+      snprintf (response, sizeof (response), not_found_response_template, page);
+      write (connection_fd, response, strlen (response));
+      return;
+    }
+
+    fseek(file, 0, SEEK_END);
+    fileLen=ftell(file);
+    rewind(file);
+
+    char * response = malloc(strlen(jpg_response) + fileLen + 1);
+    int i = 0;
+
+    for (i = 0; i < strlen(jpg_response); i++) {
+      response[i] = jpg_response[i];
+    }
+
+    for(; i < fileLen; i++) {
+      response[i] = fgetc(file);
+    }
+
+    // printf("%s\n", response);
+
+    write(connection_fd, response, strlen(jpg_response) + fileLen + 1);
+    fclose(file);
+  }
+  else if (strstr(page, ".gif") != NULL) {
+    long ret;
+    int file_fd;
+    char  * filename = malloc(strlen(page)+2);
+
+    strcat(filename, ".");
+    strcat(filename, page);
+
+    printf("%s\n", filename);
+
+    FILE *file;
+    long fileLen;
+
+    file = fopen(filename, "rb+");
+    if (!file)
+    {
+      char response[1024];
+      snprintf (response, sizeof (response), not_found_response_template, page);
+      write (connection_fd, response, strlen (response));
+      return;
+    }
+
+    fseek(file, 0, SEEK_END);
+    fileLen=ftell(file);
+    rewind(file);
+
+    char * response = malloc(strlen(jpg_response) + fileLen + 1);
+    int i = 0;
+
+    for (i = 0; i < strlen(gif_response); i++) {
+      response[i] = gif_response[i];
+    }
+
+    for(; i < fileLen; i++) {
+      response[i] = fgetc(file);
+    }
+
+    // printf("%s\n", response);
+
+    write(connection_fd, response, strlen(jpg_response) + fileLen + 1);
+    fclose(file);
   }
   else {
 
