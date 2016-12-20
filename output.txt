@@ -1,7 +1,0 @@
-133 regular
-219 directory
-0 link
-0 fifo
-0 socket
-0 block
-0 character
