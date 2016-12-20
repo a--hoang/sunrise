@@ -1,0 +1,13 @@
+#!/bin/bash
+gnuplot -persist <<-EOFMarker
+	set title "File Types"
+	set terminal jpeg
+	set autoscale
+	set output "FileTypes.jpg"
+	set style data histograms
+	set style fill solid 1.00 border -1
+	set yrange [0:10<*]
+        set xtics center
+        set grid
+	plot "output.txt" using 1:xticlabels(2) title "File Types"
+EOFMarker

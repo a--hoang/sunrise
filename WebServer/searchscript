@@ -1,0 +1,64 @@
+#!/bin/bash
+# Search Script for Directories
+LOCATION="$1"
+
+FILECOUNT=0
+DIRCOUNT=0
+LINKCOUNT=0
+FIFOCOUNT=0
+SOCKETCOUNT=0
+BLOCKCOUNT=0
+CHARCOUNT=0
+
+DIRS=$(find $LOCATION -type f)
+FILES=$(find $LOCATION -type d)
+LINKS=$(find $LOCATION -type l)
+FIFOS=$(find $LOCATION -type p)
+SOCKETS=$(find $LOCATION -type s)
+BLOCKS=$(find $LOCATION -type b)
+CHARS=$(find $LOCATION -type c)
+
+for d in $DIRS
+do
+   DIRCOUNT=$[$DIRCOUNT+1]
+done
+
+for f in $FILES
+do
+   FILECOUNT=$[$FILECOUNT+1]
+done
+
+for l in $LINKS
+do
+   LINKCOUNT=$[$LINKCOUNT+1]
+done
+
+for f in $FIFOS
+do
+   FIFOCOUNT=$[$FIFOCOUNT+1]
+done
+
+for s in $SOCKETS
+do
+   SOCKETCOUNT=$[$SOCKETCOUNT+1]
+done
+
+for b in $BLOCKS
+do
+   BLOCKCOUNT=$[$BLOCKCOUNT+1]
+done
+
+for c in $CHARS
+do
+   CHARCOUNT=$[$CHARCOUNT+1]
+done
+
+echo $FILECOUNT" regular" > './output.txt'
+echo $DIRCOUNT" directory" >> './output.txt'
+echo $LINKCOUNT" link" >> './output.txt'
+echo $FIFOCOUNT" fifo" >> './output.txt'
+echo $SOCKETCOUNT" socket" >> './output.txt'
+echo $BLOCKCOUNT" block" >> './output.txt'
+echo $CHARCOUNT" character" >> './output.txt'
+
+./graph
